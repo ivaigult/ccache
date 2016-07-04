@@ -38,7 +38,6 @@ if (GIT_SUCCESS EQUAL 0)
 	else()
         string(REGEX REPLACE "^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\\-([0-9]+)\\-(.*)" "\\1.\\2.\\3" CCACHE_VERSION ${GIT_DESCRIBE})
     endif()
-	message("CCACHE_VERSION = ${CCACHE_VERSION}")
 else()
    set(CCACHE_VERSION "unknown")
 endif()
@@ -114,7 +113,7 @@ endif()
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_LIST_DIR}
 	${ZLIB_INCLUDE_DIRS}
 )
 
