@@ -19,9 +19,9 @@
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 # ################################################################################
 
-project(ccache LANGUAGES C)
+project(ccache)
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.7)
 enable_testing()
 
 include(CheckIncludeFiles)
