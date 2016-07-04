@@ -44,7 +44,6 @@ add_executable(ccache_ut
 )
 
 target_link_libraries(ccache_ut ccache_core)
-target_include_directories(ccache_ut PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 add_test(ccache_ut ccache_ut)
 

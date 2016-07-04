@@ -89,7 +89,14 @@ endif()
 # Fallback to own libz
 if (USE_OWN_LIBZ)
     add_subdirectory(zlib)
+    set(ZLIB_INCLUDE_DIRS zlib)
 endif()
+
+include_directories(
+    ${CMAKE_CURRENT_BINARY_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${ZLIB_INCLUDE_DIRS}
+)
 
 add_subdirectory(test)
 
@@ -139,13 +146,6 @@ set(HEADERS ccache.h
 add_library(ccache_core STATIC
     ${SOURCES}
     ${HEADERS}
-)
-
-target_include_directories(ccache_core
-PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}
-PUBLIC
-    .
 )
 
 target_compile_definitions(ccache_core PRIVATE -DHAVE_CONFIG_H=1)

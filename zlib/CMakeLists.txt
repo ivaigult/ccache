@@ -56,8 +56,6 @@ add_library(zlib STATIC
 
 add_library(z ALIAS zlib)
 
-target_include_directories(zlib PUBLIC . PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-
 macro(add_definition_if_have_one target definition)
     if (${definition})
 	    target_compile_definitions(${target} PRIVATE "-D${definition}=${${definition}}")
