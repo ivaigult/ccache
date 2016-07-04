@@ -54,5 +54,15 @@ add_library(zlib STATIC
   ${HEADERS}
 )
 
-target_include_directories(zlib PUBLIC . )
+target_include_directories(zlib PUBLIC . PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
+macro(add_definition_if_have_one target definition)
+    if (${definition})
+	    target_compile_definitions(${target} PRIVATE "-D${definition}=${${definition}}")
+	endif()
+endmacro()
+
+# We don't have auto generated config.h for zlib
+add_definition_if_have_one(zlib HAVE_UNISTD_H)
+add_definition_if_have_one(zlib HAVE_STDARG_H)
+add_definition_if_have_one(zlib HAVE_VSNPRINTF)
