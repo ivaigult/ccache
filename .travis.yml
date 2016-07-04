@@ -20,7 +20,7 @@ matrix:
     include:
         - os: linux
           compiler: i586-mingw32msvc-gcc
-          env: HOST="--host=i586-mingw32msvc" TEST="test/main.exe"
+          env: HOST="--host=i586-mingw32msvc" CUSTOM_OPTIONS=-DENABLE_TESTING=OFF
         - os: linux
           compiler: clang
           env: CFLAGS="-fsanitize=address -g" ASAN_OPTIONS="detect_leaks=0"
@@ -30,6 +30,6 @@ matrix:
           compiler: gcc
 
 script:
-    - cmake -DCMAKE_BUILD_TYPE=Release
+    - cmake -DCMAKE_BUILD_TYPE=Release ${CUSTOM_OPTIONS}
     - make VERBOSE=1
-    - ctest -V
+    - make test VERBOSE=1

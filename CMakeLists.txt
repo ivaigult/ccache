@@ -22,7 +22,11 @@
 project(ccache)
 
 cmake_minimum_required(VERSION 2.7)
-enable_testing()
+
+option(ENABLE_TESTING  "Enable testing" ON)
+if (ENABLE_TESTING)
+    enable_testing()
+endif()
 
 option(DEVELOPER_BUILD "Enable developer build" ON)
 
