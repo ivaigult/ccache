@@ -42,3 +42,4 @@
 #cmakedefine HAVE_VSNPRINTF 1
 #cmakedefine HAVE__BOOL 1
 
+#cmakedefine WORDS_BIGENDIAN 1
