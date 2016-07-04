@@ -54,7 +54,7 @@ add_test(ccache_ut ccache_ut)
 
 if(UNIX)
     add_test(NAME ccache_test
-	    COMMAND ${PROJECT_SOURCE_DIR}/test.sh
+	    COMMAND sh ${PROJECT_SOURCE_DIR}/test.sh
 	    WORKING_DIRECTORY $<TARGET_FILE_DIR:ccache>
 	)
 endif()
