@@ -7,7 +7,7 @@ addons:
             - zlib1g-dev
             - mingw32
             - mingw32-binutils
-
+            - cmake
 os:
     - linux
     - osx
@@ -30,7 +30,6 @@ matrix:
           compiler: gcc
 
 script:
-    - ./autogen.sh
-    - ./configure $HOST
-    - make
-    - make ${TEST:-test}
+    - cmake -DCMAKE_BUILD_TYPE=Release
+    - cmake --build .
+    - ctest -V
