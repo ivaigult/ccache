@@ -98,6 +98,8 @@ include_directories(
 	${ZLIB_INCLUDE_DIRS}
 )
 
+add_definitions(-DHAVE_CONFIG_H=1)
+
 add_subdirectory(test)
 
 set(SOURCES args.c
@@ -148,7 +150,6 @@ add_library(ccache_core STATIC
     ${HEADERS}
 )
 
-target_compile_definitions(ccache_core PRIVATE -DHAVE_CONFIG_H=1)
 target_link_libraries(ccache_core z m)
 
 add_executable(ccache main.c)

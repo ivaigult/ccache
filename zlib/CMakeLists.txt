@@ -49,20 +49,20 @@ set(HEADERS crc32.h
     zutil.h
 )
 
+macro(add_definition_if_have_one definition)
+    if (${definition})
+        add_definitions("-D${definition}=${${definition}}")
+	endif()
+endmacro()
+
+# We don't have auto generated config.h for zlib
+add_definition_if_have_one(HAVE_UNISTD_H)
+add_definition_if_have_one(HAVE_STDARG_H)
+add_definition_if_have_one(HAVE_VSNPRINTF)
+
 add_library(zlib STATIC
   ${SOURCES}
   ${HEADERS}
 )
 
 add_library(z ALIAS zlib)
-
-macro(add_definition_if_have_one target definition)
-    if (${definition})
-	    target_compile_definitions(${target} PRIVATE "-D${definition}=${${definition}}")
-	endif()
-endmacro()
-
-# We don't have auto generated config.h for zlib
-add_definition_if_have_one(zlib HAVE_UNISTD_H)
-add_definition_if_have_one(zlib HAVE_STDARG_H)
-add_definition_if_have_one(zlib HAVE_VSNPRINTF)
