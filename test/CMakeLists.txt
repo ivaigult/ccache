@@ -20,30 +20,37 @@
 # ################################################################################
 
 set(SOURCES main.c
-  framework.c
-  test_args.c
-  test_argument_processing.c
-  test_argument_processing.c
-  test_compopt.c
-  test_compopt.c
-  test_conf.c
-  test_counters.c
-  test_hash.c
-  test_hashutil.c
-  test_lockfile.c
-  test_stats.c
-  test_util.c
-  util.c
+    framework.c
+    test_args.c
+    test_argument_processing.c
+    test_argument_processing.c
+    test_compopt.c
+    test_compopt.c
+    test_conf.c
+    test_counters.c
+    test_hash.c
+    test_hashutil.c
+    test_lockfile.c
+    test_stats.c
+    test_util.c
+    util.c
 )
 
 set(HEADERS util.h)
 
-add_executable(ccache_test
+add_executable(ccache_ut
     ${SOURCES}
     ${HEADERS}
 )
 
-target_link_libraries(ccache_test ccache_core)
-target_include_directories(ccache_test PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(ccache_ut ccache_core)
+target_include_directories(ccache_ut PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
-add_test(ccache_test ccache_test)
+add_test(ccache_ut ccache_ut)
+
+if(UNIX)
+    add_test(NAME ccache_test
+	    COMMAND ${PROJECT_SOURCE_DIR}/test.sh
+	    WORKING_DIRECTORY $<TARGET_FILE_DIR:ccache>
+	)
+endif()

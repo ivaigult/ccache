@@ -21,7 +21,7 @@
 
 project(ccache LANGUAGES C)
 
-cmake_minimum_required(VERSION 2.7)
+cmake_minimum_required(VERSION 2.8)
 enable_testing()
 
 include(CheckIncludeFiles)
