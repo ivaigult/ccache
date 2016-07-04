@@ -35,6 +35,12 @@
 #define STRINGIFY(x) #x
 #define TO_STRING(x) STRINGIFY(x)
 
+#ifndef CCACHE_VERSION_VAR
+#define CCACHE_VERSION_VAR "unknown"
+#endif
+
+const char CCACHE_VERSION[] = CCACHE_VERSION_VAR;
+
 static const char VERSION_TEXT[] =
   MYNAME " version %s\n"
   "\n"

@@ -24,6 +24,26 @@ project(ccache)
 cmake_minimum_required(VERSION 2.7)
 enable_testing()
 
+option(DEVELOPER_BUILD "Enable developer build" ON)
+
+execute_process(COMMAND "git" "describe"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	RESULT_VARIABLE   GIT_SUCCESS
+	OUTPUT_VARIABLE   GIT_DESCRIBE
+)
+
+if (GIT_SUCCESS EQUAL 0)
+    if (NOT DEVELOPER_BUILD)
+        string(REGEX REPLACE "^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\\-([0-9]+)\\-(.*)" "\\1.\\2.\\3+\\4_\\5" CCACHE_VERSION ${GIT_DESCRIBE})
+	else()
+        string(REGEX REPLACE "^v([0-9]+)\\.([0-9]+)\\.([0-9]+)\\-([0-9]+)\\-(.*)" "\\1.\\2.\\3" CCACHE_VERSION ${GIT_DESCRIBE})
+    endif()
+	message("CCACHE_VERSION = ${CCACHE_VERSION}")
+else()
+   set(CCACHE_VERSION "unknown")
+endif()
+  
+  
 include(CheckIncludeFiles)
 check_include_files("ctype.h"     HAVE_CTYPE_H    )
 check_include_files("dirent.h"    HAVE_DIRENT_H   )
@@ -77,7 +97,7 @@ test_big_endian(VARIABLE WORDS_BIGENDIAN)
 set(CONFIG_H ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 configure_file(config.h.new ${CONFIG_H})
 
-option(USE_OWN_LIBZ OFF)
+option(USE_OWN_LIBZ "Compile own version of libz and link against it" OFF)
 
 if (NOT USE_OWN_LIBZ)
     include(FindZLIB)
@@ -98,7 +118,7 @@ include_directories(
 	${ZLIB_INCLUDE_DIRS}
 )
 
-add_definitions(-DHAVE_CONFIG_H=1)
+add_definitions(-DHAVE_CONFIG_H=1 -DCCACHE_VERSION_VAR="${CCACHE_VERSION}")
 
 add_subdirectory(test)
 
@@ -125,7 +145,6 @@ set(SOURCES args.c
     snprintf.c	
     stats.c	util.c
     unify.c
-    version.c
 )
 
 set(HEADERS ccache.h
