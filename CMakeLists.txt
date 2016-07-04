@@ -22,6 +22,7 @@
 project(ccache LANGUAGES C)
 
 cmake_minimum_required(VERSION 2.7)
+enable_testing()
 
 include(CheckIncludeFiles)
 check_include_files("ctype.h"     HAVE_CTYPE_H    )
@@ -75,6 +76,8 @@ configure_file(config.h.new ${CONFIG_H})
 
 add_subdirectory(zlib)
 
+add_subdirectory(test)
+
 set(SOURCES args.c
     ccache.c
     cleanup.c
@@ -92,7 +95,6 @@ set(SOURCES args.c
     hashutil.c
     language.c
     lockfile.c
-    main.c
     manifest.c
     mdfour.c	
     murmurhashneutral2.c
@@ -119,11 +121,20 @@ set(HEADERS ccache.h
 	system.h
 )
 
-add_executable(ccache
+add_library(ccache_core STATIC
     ${SOURCES}
     ${HEADERS}
 )
 
-target_include_directories(ccache PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-target_compile_definitions(ccache PRIVATE -DHAVE_CONFIG_H=1)
-target_link_libraries(ccache zlib m)
+target_include_directories(ccache_core
+PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}
+PUBLIC
+    .
+)
+
+target_compile_definitions(ccache_core PRIVATE -DHAVE_CONFIG_H=1)
+target_link_libraries(ccache_core zlib m)
+
+add_executable(ccache main.c)
+target_link_libraries(ccache ccache_core)
