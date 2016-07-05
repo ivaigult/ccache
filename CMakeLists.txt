@@ -109,12 +109,12 @@ if (NOT USE_OWN_LIBZ)
         set(USE_OWN_LIBZ YES)
 	else()
 	    # Ok, it's found but it might not work like it happens with mingw on linux
-	    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_libz.c "#include \"zlib.h\"\n int main() {return 0;}\n")
-        try_compile(ZLIB_COMPILES ${CMAKE_CURRENT_BINARY_DIR}/temp ${CMAKE_CURRENT_BINARY_DIR}/test_libz.c
-                    CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${ZLIB_INCLUDE_DIRS}")
-	    if (NOT ZLIB_COMPILES)
-            set(USE_OWN_LIBZ YES)
-        endif()			
+	    # file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_libz.c "#include \"zlib.h\"\n int main() {return 0;}\n")
+        # try_compile(ZLIB_COMPILES ${CMAKE_CURRENT_BINARY_DIR}/temp ${CMAKE_CURRENT_BINARY_DIR}/test_libz.c
+        #             CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${ZLIB_INCLUDE_DIRS}")
+	    # if (NOT ZLIB_COMPILES)
+        #     set(USE_OWN_LIBZ YES)
+        # endif()			
 	endif()
 endif()
 
