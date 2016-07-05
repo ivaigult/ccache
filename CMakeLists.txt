@@ -46,7 +46,6 @@ else()
    set(CCACHE_VERSION "unknown")
 endif()
   
-  
 include(CheckIncludeFiles)
 check_include_files("ctype.h"     HAVE_CTYPE_H    )
 check_include_files("dirent.h"    HAVE_DIRENT_H   )
@@ -107,14 +106,6 @@ if (NOT USE_OWN_LIBZ)
 
 	if (NOT ZLIB_FOUND)
         set(USE_OWN_LIBZ YES)
-	else()
-	    # Ok, it's found but it might not work like it happens with mingw on linux
-	    # file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_libz.c "#include \"zlib.h\"\n int main() {return 0;}\n")
-        # try_compile(ZLIB_COMPILES ${CMAKE_CURRENT_BINARY_DIR}/temp ${CMAKE_CURRENT_BINARY_DIR}/test_libz.c
-        #             CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${ZLIB_INCLUDE_DIRS}")
-	    # if (NOT ZLIB_COMPILES)
-        #     set(USE_OWN_LIBZ YES)
-        # endif()			
 	endif()
 endif()
 
@@ -124,14 +115,6 @@ if (USE_OWN_LIBZ)
     set(ZLIB_INCLUDE_DIRS zlib)
 	set(ZLIB_LIBRARIES    zlib)
 endif()
-
-# Workaround http://www.cmake.org/Bug/view.php?id=9985
-# include(CheckSymbolExists)
-# check_symbol_exists("__MINGW32__" "" MINGW)
-# if (MINGW)
-#     set(OLD_CMAKE_SHARED_LIBRARY_LINK_C_FLAGS ${CMAKE_SHARED_LIBRARY_LINK_C_FLAGS})
-#     string(REPLACE "-rdynamic" "" CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "${OLD_CMAKE_SHARED_LIBRARY_LINK_C_FLAGS}")
-# endif()
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
