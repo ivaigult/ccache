@@ -53,8 +53,9 @@ target_link_libraries(ccache_ut ccache_core)
 add_test(ccache_ut ccache_ut)
 
 if(UNIX)
+    set(SHELL $ENV{SHELL})
     add_test(NAME ccache_test
-	    COMMAND sh ${PROJECT_SOURCE_DIR}/test.sh
+	    COMMAND ${SHELL} "${PROJECT_SOURCE_DIR}/test.sh"
 	    WORKING_DIRECTORY $<TARGET_FILE_DIR:ccache>
 	)
 endif()
