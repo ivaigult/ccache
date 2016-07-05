@@ -192,5 +192,9 @@ add_library(ccache_core STATIC
 
 target_link_libraries(ccache_core ${ZLIB_LIBRARIES} m)
 
+if(WIN32)
+    target_link_libraries(ccache_core ws2_32)
+endif()
+
 add_executable(ccache main.c)
 target_link_libraries(ccache ccache_core)
