@@ -125,6 +125,16 @@ if (USE_OWN_LIBZ)
 	set(ZLIB_LIBRARIES    zlib)
 endif()
 
+# Workaround http://www.cmake.org/Bug/view.php?id=9985
+include(CheckSymbolExists)
+check_symbol_exists("__MINGW32__" "" MINGW)
+if (MINGW)
+    set(OLD_CMAKE_SHARED_LIBRARY_LINK_C_FLAGS ${CMAKE_SHARED_LIBRARY_LINK_C_FLAGS})
+    string(REPLACE "-rdynamic" "" CMAKE_SHARED_LIBRARY_LINK_C_FLAGS ${OLD_CMAKE_SHARED_LIBRARY_LINK_C_FLAGS})
+endif()
+
+message("CMAKE_SHARED_LIBRARY_LINK_C_FLAGS = ${CMAKE_SHARED_LIBRARY_LINK_C_FLAGS}")
+
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_LIST_DIR}
