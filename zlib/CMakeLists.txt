@@ -64,5 +64,3 @@ add_library(zlib STATIC
   ${SOURCES}
   ${HEADERS}
 )
-
-add_library(z ALIAS zlib)

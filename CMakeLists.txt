@@ -104,8 +104,17 @@ option(USE_OWN_LIBZ "Compile own version of libz and link against it" OFF)
 
 if (NOT USE_OWN_LIBZ)
     include(FindZLIB)
+
 	if (NOT ZLIB_FOUND)
         set(USE_OWN_LIBZ YES)
+	else()
+	    # Ok, it's found but it might not work like it happens with mingw on linux
+	    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_libz.c "#include \"zlib.h\"\n int main() {return 0;}\n")
+        try_compile(ZLIB_COMPILES ${CMAKE_CURRENT_BINARY_DIR}/temp ${CMAKE_CURRENT_BINARY_DIR}/test_libz.c
+                    CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${ZLIB_INCLUDE_DIRS}")
+	    if (NOT ZLIB_COMPILES)
+            set(USE_OWN_LIBZ YES)
+        endif()			
 	endif()
 endif()
 
@@ -113,11 +122,8 @@ endif()
 if (USE_OWN_LIBZ)
     add_subdirectory(zlib)
     set(ZLIB_INCLUDE_DIRS zlib)
+	set(ZLIB_LIBRARIES    zlib)
 endif()
-
-message("USE_OWN_LIBZ = ${USE_OWN_LIBZ}")
-message("ZLIB_FOUND = ${ZLIB_FOUND}")
-message("ZLIB_INCLUDE_DIRS = ${ZLIB_INCLUDE_DIRS}")
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -176,7 +182,7 @@ add_library(ccache_core STATIC
     ${HEADERS}
 )
 
-target_link_libraries(ccache_core z m)
+target_link_libraries(ccache_core ${ZLIB_LIBRARIES} m)
 
 add_executable(ccache main.c)
 target_link_libraries(ccache ccache_core)
