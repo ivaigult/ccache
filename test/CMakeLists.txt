@@ -54,18 +54,6 @@ add_test(ccache_ut ccache_ut)
 
 find_program(BASH_PROGRAM bash)
 if(BASH_PROGRAM)
-    set(SHELL $ENV{SHELL})
-
-	message("Shell is: ${SHELL}")
-	message("PROJECT_SOURCE_DIR is: ${PROJECT_SOURCE_DIR}")
-	message("TARGET_FILE_DIR is: " $<TARGET_FILE_DIR:ccache>)
-
-	file(READ "${PROJECT_SOURCE_DIR}/test.sh" SCRIPT_CONTENT)
-	message("Script conntent is ${SCRIPT_CONTENT}")
-
-	file(READ ${BASH_PROGRAM} BASH_CONTENT)
-	message("Bash exists and its content is: " ${BASH_CONTENT})
-	
     add_test(NAME ccache_test
 	    COMMAND ${BASH_PROGRAM} "${PROJECT_SOURCE_DIR}/test.sh"
 	    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
