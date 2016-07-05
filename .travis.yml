@@ -20,7 +20,7 @@ matrix:
     include:
         - os: linux
           compiler: i586-mingw32msvc-gcc
-          env: HOST="--host=i586-mingw32msvc" CUSTOM_OPTIONS=-DENABLE_TESTING=OFF
+          env: HOST="--host=i586-mingw32msvc" CUSTOM_OPTIONS="-DENABLE_TESTING=OFF -DCMAKE_TOOLCHAIN_FILE=mingw_toolchain.cmake"
         - os: linux
           compiler: clang
           env: CFLAGS="-fsanitize=address -g" ASAN_OPTIONS="detect_leaks=0"
