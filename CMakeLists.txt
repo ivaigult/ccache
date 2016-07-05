@@ -196,5 +196,9 @@ if(WIN32)
     target_link_libraries(ccache_core ws2_32)
 endif()
 
+if (MINGW)
+    target_link_libraries(ccache_core mingw32)
+endif()
+
 add_executable(ccache main.c)
 target_link_libraries(ccache ccache_core)
