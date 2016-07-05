@@ -115,6 +115,10 @@ if (USE_OWN_LIBZ)
     set(ZLIB_INCLUDE_DIRS zlib)
 endif()
 
+message("USE_OWN_LIBZ = ${USE_OWN_LIBZ}")
+message("ZLIB_FOUND = ${ZLIB_FOUND}")
+message("ZLIB_INCLUDE_DIRS = ${ZLIB_INCLUDE_DIRS}")
+
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_LIST_DIR}
