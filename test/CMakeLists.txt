@@ -52,7 +52,8 @@ target_link_libraries(ccache_ut ccache_core)
 
 add_test(ccache_ut ccache_ut)
 
-if(UNIX)
+find_program(BASH_PROGRAM bash)
+if(BASH_PROGRAM)
     set(SHELL $ENV{SHELL})
 
 	message("Shell is: ${SHELL}")
@@ -62,11 +63,11 @@ if(UNIX)
 	file(READ "${PROJECT_SOURCE_DIR}/test.sh" SCRIPT_CONTENT)
 	message("Script conntent is ${SCRIPT_CONTENT}")
 
-	file(READ ${SHELL} BASH_CONTENT)
+	file(READ ${BASH_PROGRAM} BASH_CONTENT)
 	message("Bash exists and its content is: " ${BASH_CONTENT})
 	
     add_test(NAME ccache_test
-	    COMMAND ${SHELL} "${PROJECT_SOURCE_DIR}/test.sh"
-	    WORKING_DIRECTORY $<TARGET_FILE_DIR:ccache>
+	    COMMAND ${BASH_PROGRAM} "${PROJECT_SOURCE_DIR}/test.sh"
+	    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 	)
 endif()
