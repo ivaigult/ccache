@@ -54,7 +54,7 @@ files_compare(struct files **f1, struct files **f2)
 
 /* this builds the list of files in the cache */
 static void
-traverse_fn(const char *fname, struct stat *st)
+traverse_fn(const char *fname, struct stat *st, void* cookie)
 {
 	char *p;
 
@@ -201,7 +201,7 @@ cleanup_dir(struct conf *conf, const char *dir)
 	files_in_cache = 0;
 
 	/* build a list of files */
-	traverse(dir, traverse_fn);
+	traverse(dir, NULL, traverse_fn);
 
 	/* clean the cache */
 	sort_and_clean();
@@ -238,7 +238,7 @@ void cleanup_all(struct conf *conf)
 }
 
 /* traverse function for wiping files */
-static void wipe_fn(const char *fname, struct stat *st)
+static void wipe_fn(const char *fname, struct stat *st, void* cookie)
 {
 	char *p;
 
@@ -263,10 +263,32 @@ void wipe_all(struct conf *conf)
 
 	for (i = 0; i <= 0xF; i++) {
 		char *dname = format("%s/%1x", conf->cache_dir, i);
-		traverse(dname, wipe_fn);
+		traverse(dname, NULL, wipe_fn);
 		free(dname);
 	}
 
 	/* and fix the counters */
 	cleanup_all(conf);
+}
+
+static void cleanup_tmp_entry(const char *fname, struct stat *st, void* cookie)
+{
+	time_t now = *(time_t*)cookie;
+	if (st->st_mtime + 3600 < now) {
+		tmp_unlink(fname);
+	}
+}
+
+void cleanup_internal_tempdir(const char* temp_dir, struct conf *conf)
+{
+	struct stat st;
+	time_t now = time(NULL);
+
+	if (x_stat(conf->cache_dir, &st) != 0 || st.st_mtime + 3600 >= now) {
+		/* No cleanup needed. */
+		return;
+	}
+
+	update_mtime(conf->cache_dir);
+	traverse(temp_dir, &time, cleanup_tmp_entry);
 }

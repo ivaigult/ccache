@@ -857,7 +857,7 @@ reformat(char **ptr, const char *format, ...)
  * Recursive directory traversal. fn() is called on all entries in the tree.
  */
 void
-traverse(const char *dir, void (*fn)(const char *, struct stat *))
+traverse(const char *dir, void* cookie, void (*fn)(const char *, struct stat *, void*))
 {
 	DIR *d;
 	struct dirent *de;
@@ -892,10 +892,10 @@ traverse(const char *dir, void (*fn)(const char *, struct stat *))
 		}
 
 		if (S_ISDIR(st.st_mode)) {
-			traverse(fname, fn);
+			traverse(fname, cookie, fn);
 		}
 
-		fn(fname, &st);
+		fn(fname, &st, cookie);
 		free(fname);
 	}
 

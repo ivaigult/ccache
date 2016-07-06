@@ -465,43 +465,6 @@ set_up_signal_handlers(void)
 }
 #endif /* _WIN32 */
 
-static void
-clean_up_internal_tempdir(void)
-{
-	DIR *dir;
-	struct dirent *entry;
-	struct stat st;
-	time_t now = time(NULL);
-
-	if (x_stat(conf->cache_dir, &st) != 0 || st.st_mtime + 3600 >= now) {
-		/* No cleanup needed. */
-		return;
-	}
-
-	update_mtime(conf->cache_dir);
-
-	dir = opendir(temp_dir());
-	if (!dir) {
-		return;
-	}
-
-	while ((entry = readdir(dir))) {
-		char *path;
-
-		if (str_eq(entry->d_name, ".") || str_eq(entry->d_name, "..")) {
-			continue;
-		}
-
-		path = format("%s/%s", temp_dir(), entry->d_name);
-		if (x_lstat(path, &st) == 0 && st.st_mtime + 3600 < now) {
-			tmp_unlink(path);
-		}
-		free(path);
-	}
-
-	closedir(dir);
-}
-
 static char *
 get_current_working_dir(void)
 {
@@ -3291,7 +3254,7 @@ ccache(int argc, char *argv[])
 	find_compiler(argv);
 
 	if (str_eq(conf->temporary_dir, "")) {
-		clean_up_internal_tempdir();
+		cleanup_internal_tempdir(temp_dir(), conf);
 	}
 
 	if (!str_eq(conf->log_file, "")) {

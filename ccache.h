@@ -144,7 +144,7 @@ void x_unsetenv(const char *name);
 int x_fstat(int fd, struct stat *buf);
 int x_lstat(const char *pathname, struct stat *buf);
 int x_stat(const char *pathname, struct stat *buf);
-void traverse(const char *dir, void (*fn)(const char *, struct stat *));
+void traverse(const char *dir, void* cookie, void (*fn)(const char *, struct stat *, void* cookie));
 char *basename(const char *path);
 char *dirname(const char *path);
 const char *get_extension(const char *path);
@@ -213,7 +213,7 @@ void exitfn_call(void);
 void cleanup_dir(struct conf *conf, const char *dir);
 void cleanup_all(struct conf *conf);
 void wipe_all(struct conf *conf);
-
+void cleanup_internal_tempdir(const char* temp_dir, struct conf *conf);
 /* ------------------------------------------------------------------------- */
 /* execute.c */
 
