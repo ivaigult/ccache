@@ -58,9 +58,6 @@
 #ifdef HAVE_UTIME_H
 #include <utime.h>
 #endif
-#ifdef _WIN32
-#include "windows.h"
-#endif
 
 extern char **environ;
 
