@@ -81,6 +81,7 @@ check_function_exists("getopt_long"  HAVE_GETOPT_LONG )
 check_function_exists("getpwuid"     HAVE_GETPWUID    )
 check_function_exists("gettimeofday" HAVE_GETTIMEOFDAY)
 check_function_exists("mkstemp"      HAVE_MKSTEMP     )
+check_function_exists("pow"          HAVE_POW         )
 check_function_exists("realpath"     HAVE_REALPATH    )
 check_function_exists("snprintf"     HAVE_SNPRINTF    )
 check_function_exists("strndup"      HAVE_STRNDUP     )
@@ -176,7 +177,11 @@ add_library(ccache_core STATIC
     ${HEADERS}
 )
 
-target_link_libraries(ccache_core ${ZLIB_LIBRARIES} m)
+target_link_libraries(ccache_core ${ZLIB_LIBRARIES})
+
+if (NOT HAVE_POW)
+    target_link_libraries(ccache_core m)
+endif()
 
 if(WIN32)
     target_link_libraries(ccache_core ws2_32 psapi)

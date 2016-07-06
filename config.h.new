@@ -33,6 +33,7 @@
 #cmakedefine HAVE_GETTIMEOFDAY 1
 #cmakedefine HAVE_LONG_LONG 1
 #cmakedefine HAVE_MKSTEMP 1
+#cmakedefine HAVE_POW 1
 #cmakedefine HAVE_REALPATH 1
 #cmakedefine HAVE_SNPRINTF 1
 #cmakedefine HAVE_STRNDUP 1

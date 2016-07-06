@@ -859,6 +859,7 @@ reformat(char **ptr, const char *format, ...)
 void
 traverse(const char *dir, void* cookie, void (*fn)(const char *, struct stat *, void*))
 {
+#if defined(HAVE_DIRENT_H)
 	DIR *d;
 	struct dirent *de;
 
@@ -900,6 +901,47 @@ traverse(const char *dir, void* cookie, void (*fn)(const char *, struct stat *, 
 	}
 
 	closedir(d);
+#elif defined(_WIN32)
+	WIN32_FIND_DATAA find_data;
+	char* search_pattern = format("%s\\*", dir);
+	HANDLE found = FindFirstFileA(search_pattern, &find_data);
+	struct stat st;
+
+	if (INVALID_HANDLE_VALUE == found) {
+		return;
+	}
+
+	do {
+		if (str_eq(find_data.dwFileAttributes, ".")) {
+			continue;
+		}
+		if (str_eq(find_data.dwFileAttributes, "..")) {
+			continue;
+		}
+
+		char* fname = format("%s\\%s", dir, find_data.cFileName);
+
+		if (x_stat(fname, &st)) {
+			if (errno != ENOENT && errno != ESTALE) {
+				fatal("lstat %s failed: %s", fname, strerror(errno));
+			}
+			free(fname);
+			continue;
+		}
+
+		if (find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			traverse(fname, cookie, fn);
+		}
+
+		fn(fname, &st, cookie);
+		free(fname);
+	} while (FindNextFileA(found, &find_data));
+
+	FindClose(found);
+	free(search_pattern);
+#else
+#error "Not supported"
+#endif
 }
 
 
