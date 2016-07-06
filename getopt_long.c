@@ -48,6 +48,13 @@
 #define BADARG ':'
 #define EMSG   ""
 
+#ifndef HAVE_GETOPT
+int   opterr = 1;
+int   optind = 1;
+int   optopt = 0;
+char *optarg = NULL;
+#endif
+
 int
 getopt_long(int argc, char *const argv[],
             const char *optstring,

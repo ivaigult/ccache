@@ -29,6 +29,7 @@
 #cmakedefine HAVE_COMPAR_FN_T 1
 #cmakedefine HAVE_GETHOSTNAME 1
 #cmakedefine HAVE_GETOPT_LONG 1
+#cmakedefine HAVE_GETOPT 1
 #cmakedefine HAVE_GETPWUID 1
 #cmakedefine HAVE_GETTIMEOFDAY 1
 #cmakedefine HAVE_LONG_LONG 1
