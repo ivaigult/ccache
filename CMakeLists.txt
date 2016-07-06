@@ -101,7 +101,9 @@ check_type_size("ssize_t"                HAVE_SSIZE_T               )
 include(TestBigEndian)
 test_big_endian(VARIABLE WORDS_BIGENDIAN)
 
-set(CONFIG_H ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+set(GENERATED_FILES ${CMAKE_CURRENT_BINARY_DIR})
+file(MAKE_DIRECTORY ${GENERATED_FILES})
+set(CONFIG_H ${GENERATED_FILES}/config.h)
 configure_file(config.h.new ${CONFIG_H})
 
 option(USE_OWN_LIBZ "Compile own version of libz and link against it" OFF)
@@ -122,7 +124,7 @@ if (USE_OWN_LIBZ)
 endif()
 
 include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${GENERATED_FILES}
 	${CMAKE_CURRENT_LIST_DIR}
 	${ZLIB_INCLUDE_DIRS}
 )

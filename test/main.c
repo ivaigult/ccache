@@ -26,7 +26,7 @@
 
 /* *INDENT-OFF* disable uncrustify */
 #define SUITE(name) unsigned suite_ ## name(unsigned);
-#include "test/suites.h"
+#include "suites.h"
 #undef SUITE
 /* *INDENT-ON* enable uncrustify */
 
@@ -43,7 +43,7 @@ main(int argc, char **argv)
 {
 	suite_fn suites[] = {
 #define SUITE(name) &suite_ ## name,
-#include "test/suites.h"
+#include "suites.h"
 #undef SUITE
 		NULL
 	};

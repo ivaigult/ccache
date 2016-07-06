@@ -41,7 +41,7 @@ set(HEADERS util.h)
 file(GLOB test_files RELATIVE ${CMAKE_CURRENT_LIST_DIR}  "test_*.c")
 string(REPLACE "test_" "SUITE(" aux_files_var ${test_files})
 string(REPLACE ".c" ")\n" test_suites ${aux_files_var})
-file(WRITE ${CMAKE_CURRENT_LIST_DIR}/suites.h ${test_suites})
+file(WRITE ${GENERATED_FILES}/suites.h ${test_suites})
 
 add_executable(ccache_ut
     ${SOURCES}
