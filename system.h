@@ -21,7 +21,9 @@
 
 #include "config.h"
 
+#ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
+#endif
 #ifdef HAVE_SYS_MMAN_H
 #include <sys/mman.h>
 #endif
@@ -33,7 +35,9 @@
 
 #include <assert.h>
 #include <ctype.h>
+#ifdef HAVE_DIRENT_H
 #include <dirent.h>
+#endif
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -44,15 +48,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_STRINGS_H
 #include <strings.h>
+#endif
 #include <time.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#ifdef HAVE_UTIME_H
 #include <utime.h>
+#endif
+#ifdef _WIN32
+#include "windows.h"
+#endif
 
 extern char **environ;
 
 #ifndef ESTALE
 #define ESTALE -1
+#endif
+
+#if !defined(HAVE_UNISTD_H) && defined(_WIN32)
+typedef DWORD pid_t;
+inline pid_t getpid() {
+	return GetProcessId(NULL);
+}
 #endif
 
 #if !HAVE_VSNPRINTF

@@ -13,6 +13,7 @@
 #cmakedefine HAVE_STRINGS_H 1
 #cmakedefine HAVE_STRING_H 1
 #cmakedefine HAVE_SYS_DIR_H 1
+#cmakedefine HAVE_SYS_FILE_H 1
 #cmakedefine HAVE_SYS_MMAN_H 1
 #cmakedefine HAVE_SYS_NDIR_H 1
 #cmakedefine HAVE_SYS_STAT_H 1
@@ -21,6 +22,7 @@
 #cmakedefine HAVE_SYS_WAIT_H 1
 #cmakedefine HAVE_TERMIOS_H 1
 #cmakedefine HAVE_UNISTD_H 1
+#cmakedefine HAVE_UTIME_H 1
 #cmakedefine HAVE_VARARGS_H 1
 
 #cmakedefine HAVE_ASPRINTF 1
