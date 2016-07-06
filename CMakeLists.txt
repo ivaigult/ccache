@@ -94,6 +94,7 @@ include(CheckTypeSize)
 check_type_size("long long"              HAVE_LONG_LONG             )
 check_type_size("unsigned long long int" HAVE_UNSIGNED_LONG_LONG_INT)
 check_type_size("_Bool"                  HAVE__BOOL                 )
+check_type_size("ssize_t"                HAVE_SSIZE_T               )
 
 include(TestBigEndian)
 test_big_endian(VARIABLE WORDS_BIGENDIAN)

@@ -43,5 +43,6 @@
 #cmakedefine HAVE_VASPRINTF 1
 #cmakedefine HAVE_VSNPRINTF 1
 #cmakedefine HAVE__BOOL 1
+#cmakedefine HAVE_SSIZE_T 1
 
 #cmakedefine WORDS_BIGENDIAN 1

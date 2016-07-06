@@ -2086,6 +2086,9 @@ static bool
 color_output_possible(void)
 {
 	const char *term_env = getenv("TERM");
+#ifdef _MSC_VER
+#define STDERR_FILENO 2
+#endif
 	return isatty(STDERR_FILENO) && term_env && strcasecmp(term_env, "DUMB") != 0;
 }
 

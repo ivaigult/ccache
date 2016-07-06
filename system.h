@@ -108,4 +108,8 @@ typedef bool _Bool;
 #  define __bool_true_false_are_defined 1
 #endif
 
+#ifndef HAVE_SSIZE_T
+typedef ptrdiff_t ssize_t;
+#endif
+
 #endif /* CCACHE_SYSTEM_H */
