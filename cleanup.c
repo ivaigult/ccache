@@ -56,6 +56,7 @@ files_compare(struct files **f1, struct files **f2)
 static void
 traverse_fn(const char *fname, struct stat *st, void* cookie)
 {
+	(void) cookie;
 	char *p;
 
 	if (!S_ISREG(st->st_mode)) {
@@ -240,6 +241,7 @@ void cleanup_all(struct conf *conf)
 /* traverse function for wiping files */
 static void wipe_fn(const char *fname, struct stat *st, void* cookie)
 {
+	(void) cookie;
 	char *p;
 
 	if (!S_ISREG(st->st_mode)) {
