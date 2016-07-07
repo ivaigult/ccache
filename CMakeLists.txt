@@ -101,7 +101,7 @@ check_type_size("ssize_t"                HAVE_SSIZE_T               )
 include(TestBigEndian)
 test_big_endian(VARIABLE WORDS_BIGENDIAN)
 
-set(GENERATED_FILES ${CMAKE_CURRENT_BINARY_DIR})
+set(GENERATED_FILES ${CMAKE_CURRENT_BINARY_DIR}/gen)
 file(MAKE_DIRECTORY ${GENERATED_FILES})
 set(CONFIG_H ${GENERATED_FILES}/config.h)
 configure_file(config.h.new ${CONFIG_H})
@@ -192,3 +192,27 @@ endif()
 
 add_executable(ccache main.c)
 target_link_libraries(ccache ccache_core)
+
+find_program(ASCIIDOC asciidoc)
+find_program(XSLTPROC xsltproc)
+
+set(MANPAGE_XSL "manpage.xsl")
+find_path(MAN_STYLE_SHEET_PATH ${MANPAGE_XSL}
+    "/usr/local/etc/asciidoc/docbook-xsl/"
+    "/etc/asciidoc/docbook-xsl/")
+
+if (ASCIIDOC AND XSLTPROC AND MAN_STYLE_SHEET_PATH)
+    set(MANUAL_TXT "${CMAKE_CURRENT_SOURCE_DIR}/MANUAL.txt")
+    set(MANUAL_XML "${GENERATED_FILES}/MANUAL.xml")
+    set(CCACHE_1   "${CMAKE_CURRENT_BINARY_DIR}/ccache.1")
+    add_custom_command(OUTPUT ${MANUAL_XML}
+                       COMMAND ${ASCIIDOC} "-a" "revnumber=${CCACHE_VERSION}" "-d" "manpage" "-b" "docbook" "-o" ${MANUAL_XML} ${MANUAL_TXT} 
+					   DEPENDS ${MANUAL_TXT}
+					   COMMENT "Generating ${MANUAL_XML}")
+    add_custom_command(OUTPUT ${CCACHE_1}
+                       COMMAND ${XSLTPROC} "--nonet" "${MAN_STYLE_SHEET_PATH}/${MANPAGE_XSL}" ${MANUAL_XML}
+	                   DEPENDS ${MANUAL_XML}
+					   COMMENT "Generating ${CCACHE_1}")
+	add_custom_target(generate_documentation
+	                  DEPENDS ${CCACHE_1})
+endif()
