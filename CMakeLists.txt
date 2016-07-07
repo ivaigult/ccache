@@ -209,6 +209,7 @@ find_path(MAN_STYLE_SHEET_PATH ${MANPAGE_XSL}
     "/usr/local/etc/asciidoc/docbook-xsl/"
     "/etc/asciidoc/docbook-xsl/")
 
+  
 if (ASCIIDOC AND XSLTPROC AND MAN_STYLE_SHEET_PATH)
     set(MANUAL_TXT "${CMAKE_CURRENT_SOURCE_DIR}/MANUAL.txt")
     set(MANUAL_XML "${GENERATED_FILES}/MANUAL.xml")
@@ -221,8 +222,30 @@ if (ASCIIDOC AND XSLTPROC AND MAN_STYLE_SHEET_PATH)
                        COMMAND ${XSLTPROC} "--nonet" "${MAN_STYLE_SHEET_PATH}/${MANPAGE_XSL}" ${MANUAL_XML}
 	                   DEPENDS ${MANUAL_XML}
 					   COMMENT "Generating ${CCACHE_1}")
-	add_custom_target(generate_documentation
-	    DEPENDS ${CCACHE_1})
 
+    add_custom_target(man DEPENDS ${CCACHE_1})
 	install(FILES ${CCACHE_1} DESTINATION man/man1)
 endif()
+
+set(DOCUMENT_FILES "")
+
+macro(txt2html txt_file html_file)
+    add_custom_command(OUTPUT ${html_file}
+	    COMMAND ${ASCIIDOC} "-a" "revnumber=${CCACHE_VERSION}" -a toc -b xhtml11 "-o" ${html_file} "${CMAKE_CURRENT_SOURCE_DIR}/${txt_file}"
+        DEPENDS ${txt_file}
+		COMMENT "Generating ${html_file}")
+
+	list(APPEND DOCUMENT_FILES ${html_file})
+endmacro()
+
+if (ASCIIDOC)
+    txt2html(AUTHORS.txt "${CMAKE_CURRENT_BINARY_DIR}/AUTHORS.html")
+    txt2html(HACKING.txt "${CMAKE_CURRENT_BINARY_DIR}/HACKING.html")
+    txt2html(INSTALL.txt "${CMAKE_CURRENT_BINARY_DIR}/INSTALL.html")
+    txt2html(LICENSE.txt "${CMAKE_CURRENT_BINARY_DIR}/LICENSE.html")
+    txt2html(MANUAL.txt  "${CMAKE_CURRENT_BINARY_DIR}/MANUAL.html" )
+    txt2html(NEWS.txt    "${CMAKE_CURRENT_BINARY_DIR}/NEWS.html"   )
+    txt2html(README.txt  "${CMAKE_CURRENT_BINARY_DIR}/README.html" )
+endif()
+
+add_custom_target(docs DEPENDS ${DOCUMENT_FILES})
