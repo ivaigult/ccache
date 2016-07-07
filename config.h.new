@@ -48,3 +48,5 @@
 #cmakedefine HAVE_SSIZE_T 1
 
 #cmakedefine WORDS_BIGENDIAN 1
+
+#define _GNU_SOURCE 1
