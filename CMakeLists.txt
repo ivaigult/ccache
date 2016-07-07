@@ -193,6 +193,14 @@ endif()
 add_executable(ccache main.c)
 target_link_libraries(ccache ccache_core)
 
+install(TARGETS ccache
+    RUNTIME DESTINATION bin
+    PERMISSIONS
+	    OWNER_READ OWNER_WRITE OWNER_EXECUTE
+	    GROUP_READ             GROUP_EXECUTE
+	    WORLD_READ             WORLD_EXECUTE
+)
+
 find_program(ASCIIDOC asciidoc)
 find_program(XSLTPROC xsltproc)
 
@@ -214,5 +222,7 @@ if (ASCIIDOC AND XSLTPROC AND MAN_STYLE_SHEET_PATH)
 	                   DEPENDS ${MANUAL_XML}
 					   COMMENT "Generating ${CCACHE_1}")
 	add_custom_target(generate_documentation
-	                  DEPENDS ${CCACHE_1})
+	    DEPENDS ${CCACHE_1})
+
+	install(FILES ${CCACHE_1} DESTINATION man/man1)
 endif()
