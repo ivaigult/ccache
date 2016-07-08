@@ -19,46 +19,22 @@
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 # ################################################################################
 
-set(SOURCES main.c
-    framework.c
-    test_args.c
-    test_argument_processing.c
-    test_compopt.c
-    test_conf.c
-    test_counters.c
-    test_hash.c
-    test_hashutil.c
-    test_lockfile.c
-    test_stats.c
-    test_util.c
-    util.c
-)
+find_program(UNCRUSTIFY uncrustify)
 
-set(HEADERS util.h)
-
-file(GLOB test_files RELATIVE ${CMAKE_CURRENT_LIST_DIR}  "test_*.c")
-string(REPLACE "test_" "SUITE(" aux_files_var ${test_files})
-string(REPLACE ".c" ")\n" test_suites ${aux_files_var})
-file(WRITE ${GENERATED_FILES}/suites.h ${test_suites})
-
-include(uncrustify)
-
-uncrustify_files("${SOURCES}")
-uncrustify_files("${HEADERS}")
-
-add_executable(ccache_ut
-    ${SOURCES}
-    ${HEADERS}
-)
-
-target_link_libraries(ccache_ut ccache_core)
-
-add_test(ccache_ut ccache_ut)
-
-find_program(BASH_PROGRAM bash)
-if(BASH_PROGRAM)
-    add_test(NAME ccache_test
-	    COMMAND ${BASH_PROGRAM} "${PROJECT_SOURCE_DIR}/test.sh"
-	    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-	)
+if (NOT TARGET uncrustify)
+    add_custom_target(uncrustify)
 endif()
+
+function(uncrustify_files files)
+    string(MD5 files_hash "${files}")
+	set(files_ts "${files_hash}.ts")
+	set(files_tg "uncrustify_${files_hash}")
+    add_custom_command(OUTPUT ${files_ts}
+        COMMAND ${UNCRUSTIFY} -c "${PROJECT_SOURCE_DIR}/uncrustify.cfg" --no-backup --replace ${files}
+        COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_CURRENT_BINARY_DIR}/${files_ts}"
+        DEPENDS ${files}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    add_custom_target(${files_tg} DEPENDS ${files_ts})
+    add_dependencies(uncrustify ${files_tg})
+endfunction()
+	

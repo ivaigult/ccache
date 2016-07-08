@@ -23,6 +23,8 @@ project(ccache)
 
 cmake_minimum_required(VERSION 2.7)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
+
 option(ENABLE_TESTING  "Enable testing" ON)
 if (ENABLE_TESTING)
     enable_testing()
@@ -138,46 +140,52 @@ set(SOURCES args.c
     cleanup.c
     compopt.c
     conf.c		
-    # confitems_lookup.c
     counters.c		
-    # envtoconfitems_lookup.c
     execute.c
     exitfn.c
-    getopt_long.c
     hash.c	
-    hashtable.c
-    hashtable_itr.c
     hashutil.c
     language.c
     lockfile.c
     manifest.c
     mdfour.c	
     murmurhashneutral2.c
-    snprintf.c	
-    stats.c	util.c
-    unify.c
-)
+    stats.c
+	util.c
+    unify.c)
 
 set(HEADERS ccache.h
 	compopt.h
 	conf.h
 	counters.h
-	getopt_long.h
-	hashtable.h
-	hashtable_itr.h
-	hashtable_private.h
 	hashutil.h
 	language.h
 	macroskip.h
 	manifest.h
 	mdfour.h
 	murmurhashneutral2.h
-	system.h
-)
+	system.h)
+
+set(OTHER_SOURCES
+    hashtable.c
+    hashtable_itr.c
+    snprintf.c
+    getopt_long.c)
+set(OTHER_HEADERS
+	hashtable.h
+	hashtable_itr.h
+	hashtable_private.h
+	getopt_long.h)
+  
+include(uncrustify)
+uncrustify_files("${SOURCES}")
+uncrustify_files("${HEADERS}")
 
 add_library(ccache_core STATIC
     ${SOURCES}
+	${OTHER_SOURCES}
     ${HEADERS}
+	${OTHER_HEADERS}
 )
 
 target_link_libraries(ccache_core ${ZLIB_LIBRARIES})
@@ -249,3 +257,4 @@ if (ASCIIDOC)
 endif()
 
 add_custom_target(docs DEPENDS ${DOCUMENT_FILES})
+
