@@ -32,11 +32,11 @@ endif()
 
 
 if(NOT TARGET man)
-    add_custom_target(man)
+    add_custom_target(man ALL)
 endif()
 
 if(NOT TARGET docs)
-    add_custom_target(docs)
+    add_custom_target(docs ALL)
 endif()
 
 set(MANPAGE_XSL "manpage.xsl")
@@ -44,7 +44,7 @@ find_path(MAN_STYLE_SHEET_PATH ${MANPAGE_XSL}
     "/usr/local/etc/asciidoc/docbook-xsl/"
     "/etc/asciidoc/docbook-xsl/")
 
-macro(txt2man txt_file man_file version)
+function(txt2man txt_file man_file version)
     if (NOT ASCIIDOC_FOUND OR NOT XSLTPROC_FOUND OR NOT MANPAGE_XSL)
         return()
     endif()
@@ -65,10 +65,10 @@ macro(txt2man txt_file man_file version)
     add_custom_target(${target_name} DEPENDS ${man_file})
     add_dependencies(man ${target_name})
 
-	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${man_file} DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
-endmacro()
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${man_file} DESTINATION man/man1)
+endfunction()
 
-macro(txt2html txt_file html_file version)
+function(txt2html txt_file html_file version)
     if (NOT ASCIIDOC)
         return()
 	endif()
@@ -81,5 +81,5 @@ macro(txt2html txt_file html_file version)
 	set(target_name "docs_${file_name}")
     add_custom_target(${target_name} DEPENDS ${html_file})
     add_dependencies(docs ${target_name})
-	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${html_file} DESTINATION ${CMAKE_INSTALL_PREFIX}/docs/html)
-endmacro()
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${html_file} DESTINATION dosc/html)
+endfunction()

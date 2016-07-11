@@ -59,11 +59,11 @@ if (NOT USE_OWN_LIBZ)
     include(FindZLIB)
 
 	if (NOT ZLIB_FOUND)
-        set(USE_OWN_LIBZ YES)
+        message("Zlib is not found, fallback to own zlib")
+	    set(USE_OWN_LIBZ YES)
 	endif()
 endif()
 
-# Fallback to own libz
 if (USE_OWN_LIBZ)
     add_subdirectory(zlib)
     set(ZLIB_INCLUDE_DIRS zlib)
@@ -126,12 +126,20 @@ include(uncrustify)
 uncrustify_files("${SOURCES}")
 uncrustify_files("${HEADERS}")
 
+include(gperf)
+if (GPERF_FOUND)
+    gperf2c(envtoconfitems.gperf "${GENERATED_FILES}/envtoconfitems_lookup.c")
+    gperf2c(confitems.gperf      "${GENERATED_FILES}/confitems_lookup.c")
+endif() # otherwise, fallback to pregenerated
+
 add_library(ccache_core STATIC
     ${SOURCES}
 	${OTHER_SOURCES}
     ${HEADERS}
 	${OTHER_HEADERS}
 )
+
+add_dependencies(ccache_core gperf)
 
 target_link_libraries(ccache_core ${ZLIB_LIBRARIES})
 
@@ -166,3 +174,9 @@ txt2html(MANUAL.txt  MANUAL.html  ${CCACHE_VERSION})
 txt2html(NEWS.txt    NEWS.html    ${CCACHE_VERSION})
 txt2html(README.txt  README.html  ${CCACHE_VERSION})
 
+set(CPACK_PACKAGE_VERSION ${CCACHE_VERSION})
+set(CPACK_STRIP_FILES bin/ccache)
+set(CPACK_PACKAGE_CONTACT "ccache@lists.samba.org")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
+include(CPack)
