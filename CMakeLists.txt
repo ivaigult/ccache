@@ -154,52 +154,15 @@ install(TARGETS ccache
 	    WORLD_READ             WORLD_EXECUTE
 )
 
-find_program(ASCIIDOC asciidoc)
-find_program(XSLTPROC xsltproc)
+include(docs_tools)
 
-set(MANPAGE_XSL "manpage.xsl")
-find_path(MAN_STYLE_SHEET_PATH ${MANPAGE_XSL}
-    "/usr/local/etc/asciidoc/docbook-xsl/"
-    "/etc/asciidoc/docbook-xsl/")
+txt2man(MANUAL.txt ccache.1 ${CCACHE_VERSION})
 
-  
-if (ASCIIDOC AND XSLTPROC AND MAN_STYLE_SHEET_PATH)
-    set(MANUAL_TXT "${CMAKE_CURRENT_SOURCE_DIR}/MANUAL.txt")
-    set(MANUAL_XML "${GENERATED_FILES}/MANUAL.xml")
-    set(CCACHE_1   "${CMAKE_CURRENT_BINARY_DIR}/ccache.1")
-    add_custom_command(OUTPUT ${MANUAL_XML}
-                       COMMAND ${ASCIIDOC} "-a" "revnumber=${CCACHE_VERSION}" "-d" "manpage" "-b" "docbook" "-o" ${MANUAL_XML} ${MANUAL_TXT} 
-					   DEPENDS ${MANUAL_TXT}
-					   COMMENT "Generating ${MANUAL_XML}")
-    add_custom_command(OUTPUT ${CCACHE_1}
-                       COMMAND ${XSLTPROC} "--nonet" "${MAN_STYLE_SHEET_PATH}/${MANPAGE_XSL}" ${MANUAL_XML}
-	                   DEPENDS ${MANUAL_XML}
-					   COMMENT "Generating ${CCACHE_1}")
-
-    add_custom_target(man DEPENDS ${CCACHE_1})
-	install(FILES ${CCACHE_1} DESTINATION man/man1)
-endif()
-
-set(DOCUMENT_FILES "")
-
-macro(txt2html txt_file html_file)
-    add_custom_command(OUTPUT ${html_file}
-	    COMMAND ${ASCIIDOC} "-a" "revnumber=${CCACHE_VERSION}" -a toc -b xhtml11 "-o" ${html_file} "${CMAKE_CURRENT_SOURCE_DIR}/${txt_file}"
-        DEPENDS ${txt_file}
-		COMMENT "Generating ${html_file}")
-
-	list(APPEND DOCUMENT_FILES ${html_file})
-endmacro()
-
-if (ASCIIDOC)
-    txt2html(AUTHORS.txt "${CMAKE_CURRENT_BINARY_DIR}/AUTHORS.html")
-    txt2html(HACKING.txt "${CMAKE_CURRENT_BINARY_DIR}/HACKING.html")
-    txt2html(INSTALL.txt "${CMAKE_CURRENT_BINARY_DIR}/INSTALL.html")
-    txt2html(LICENSE.txt "${CMAKE_CURRENT_BINARY_DIR}/LICENSE.html")
-    txt2html(MANUAL.txt  "${CMAKE_CURRENT_BINARY_DIR}/MANUAL.html" )
-    txt2html(NEWS.txt    "${CMAKE_CURRENT_BINARY_DIR}/NEWS.html"   )
-    txt2html(README.txt  "${CMAKE_CURRENT_BINARY_DIR}/README.html" )
-endif()
-
-add_custom_target(docs DEPENDS ${DOCUMENT_FILES})
+txt2html(AUTHORS.txt AUTHORS.html ${CCACHE_VERSION})
+txt2html(HACKING.txt HACKING.html ${CCACHE_VERSION})
+txt2html(INSTALL.txt INSTALL.html ${CCACHE_VERSION})
+txt2html(LICENSE.txt LICENSE.html ${CCACHE_VERSION})
+txt2html(MANUAL.txt  MANUAL.html  ${CCACHE_VERSION})
+txt2html(NEWS.txt    NEWS.html    ${CCACHE_VERSION})
+txt2html(README.txt  README.html  ${CCACHE_VERSION})
 
