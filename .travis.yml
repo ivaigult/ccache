@@ -34,5 +34,5 @@ matrix:
 
 script:
     - cmake -DCMAKE_BUILD_TYPE=Release ${CUSTOM_OPTIONS}
-    - make VERBOSE=1
+    - cmake --build .
     - ctest -V
