@@ -9,6 +9,8 @@ addons:
             - mingw32-binutils
             - cmake
             - gperf
+            - xsltproc
+            - asciidoc
 os:
     - linux
     - osx
