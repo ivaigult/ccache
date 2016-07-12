@@ -39,7 +39,7 @@ function(gperf2c input output)
 	add_custom_command(OUTPUT "${output}"
                        COMMAND ${GPERF} "${CMAKE_CURRENT_SOURCE_DIR}/${input}" "--output-file=${output}"
 					   COMMAND ${CMAKE_COMMAND} -P "${PROJECT_SOURCE_DIR}/count_confitems.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/${input}" ${output}
-					   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${input}"
+					   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${input}" "${PROJECT_SOURCE_DIR}/count_confitems.cmake"
 					   COMMENT "Generating ${output}")
     add_custom_target("gperf_${file_name}" DEPENDS ${output})
 	add_dependencies(gperf "gperf_${file_name}")

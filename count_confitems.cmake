@@ -27,6 +27,11 @@ string(TOUPPER "${input_file_name}" var_prefix)
 
 file(READ ${input_file} file_content)
 
+#patching result to supress -Wstatic-in-inline
+file(READ "${output_file}" output_file_content)
+string(REGEX REPLACE "^(.*#ifdef __GNUC__.*)(#ifdef __GNUC__.*)$" "\\1\nstatic\n\\2" new_content "${output_file_content}")
+file(WRITE "${output_file}" "${new_content}")
+
 string(REPLACE "\n" ";" file_list "${file_content}")
 
 set(total_items 0)
@@ -39,3 +44,5 @@ foreach(line IN LISTS file_list)
 endforeach()
 
 file(APPEND ${output_file} "static const size_t ${var_prefix}_TOTAL_KEYWORDS = ${total_items};\n")
+
+
